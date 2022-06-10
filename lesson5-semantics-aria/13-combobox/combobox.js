@@ -104,7 +104,7 @@
         },
 
         /**
-         * FIXME: need to call this method somewhere :)
+         * DONE: need to call this method somewhere
          * Sets the aria-activedescendant value of the textbox to the ID of the given element.
          * @param {Element} el
          */
@@ -124,8 +124,7 @@
         this.el = el;
         this.textbox = textbox;
         this.items = Array.prototype.slice.call(el.querySelectorAll('[role=option]'));
-        for (var i = 0; i < this.items.length; i++) {
-            var item = this.items[i];
+        for (const item of this.items) {
             item.id = nextId();
 
             item.addEventListener('mouseover', this.handleHoverOnItem.bind(this));
@@ -156,7 +155,7 @@
         filter: function(str) {
             this.visibleItems = [];
             var foundItems = 0;
-            for (var item of this.items) {
+            for (const item of this.items) {
                 if (item.textContent.toLowerCase().startsWith(str.toLowerCase())) {
                     foundItems++;
                     item.hidden = false;
@@ -169,7 +168,11 @@
             if (foundItems === 0) {
                 this.hide();
             } else {
-                // FIXME: ChromeVox reports the wrong list size and position
+                // DONE: ChromeVox reports the wrong list size and position
+                this.visibleItems.forEach((item, index) => {
+                    item.setAttribute('aria-setsize', foundItems);
+                    item.setAttribute('aria-posinset', index + 1);
+                });
             }
         },
 
@@ -232,11 +235,14 @@
         changeActiveListitem: function(newIdx) {
             var active = this.activeItem;
             var newActive = this.visibleItems[newIdx];
-            if (active)
+            if (active) {
                 active.classList.remove('active');
+            }
+
             newActive.classList.add('active');
 
-            // FIXME: need to ensure focus stays on textbox, but report active list option
+            // DONE: need to ensure focus stays on textbox, but report active list option
+            this.textbox.setActiveDescendant(newActive);
         }
     };
 
