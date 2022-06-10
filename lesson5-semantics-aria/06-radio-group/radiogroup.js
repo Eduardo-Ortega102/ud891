@@ -33,10 +33,8 @@
       } else {
         button.tabIndex = "-1";
       }
-
-      // What about here?
+      button.focusedButton.setAttribute('aria-checked', false);
     }
-
   }
 
   RadioGroup.prototype.handleKeyDown = function(e) {
@@ -44,23 +42,17 @@
 
       case VK_UP:
       case VK_LEFT: {
-
         e.preventDefault();
-
         this.focusedIdx--;
         if (this.focusedIdx < 0)
           this.focusedIdx = this.focusedIdx + this.buttons.length;
-
         break;
       }
 
       case VK_DOWN:
       case VK_RIGHT: {
-
         e.preventDefault();
-
         this.focusedIdx = (this.focusedIdx + 1) % this.buttons.length;
-
         break;
       }
 
@@ -92,15 +84,14 @@
     // Set the old button to tabindex -1
     this.focusedButton.tabIndex = -1;
     this.focusedButton.removeAttribute('checked');
+    this.focusedButton.setAttribute('aria-checked', false);
 
     // Set the new button to tabindex 0 and focus it
     this.focusedButton = this.buttons[this.focusedIdx];
     this.focusedButton.tabIndex = 0;
     this.focusedButton.focus();
     this.focusedButton.setAttribute('checked', '');
-
-    // ... we probably want to do some stuff here, too ...
-
+    this.focusedButton.setAttribute('aria-checked', true);
   };
 
   var group1 = new RadioGroup('#group1');
